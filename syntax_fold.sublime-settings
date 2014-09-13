@@ -3,12 +3,12 @@
     "endMarker":"'#End",
     "config":[
         {
-        "name":"C#"
+        "name":"C#",
         "startMarker":"region",
         "endMarker":"endregion"
         },
         {
-        "name":"C+"
+        "name":"C+",
         "startMarker":"#pragma region",
         "endMarker":"#pragma endregion"
         }

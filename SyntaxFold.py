@@ -16,9 +16,9 @@ class FoldPanelCommand(sublime_plugin.TextCommand):
 		self.panel_cache.append([conf['name']])
 		self.config_map[conf['name']]=c
 		
-	self.view.window().show_quick_panel(self.panel_cache, self.on_done)
+	self.view.window().show_quick_panel(self.panel_cache, self.on_select)
 	
-	def on_done(self, index):
+	def on_select(self, index):
 		if index == -1:
 			return
 		name = self.panel_cache[index][0]
