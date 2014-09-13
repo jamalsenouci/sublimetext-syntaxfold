@@ -1,12 +1,43 @@
 import sublime, sublime_plugin
 
+
 s = sublime.load_settings('syntax_fold.sublime-settings')
 startMarker = s.get("startMarker")
 endMarker = s.get("endMarker")
 
-class FoldCommand(sublime_plugin.TextCommand):
-	def run(self, edit, all=None):
+class FoldPanelCommand(sublime_plugin.TextCommand):
+	self.panel_cache = []
+	self.config_map = {}
+	configs = s.get("prompt_config")
+	for conf in configs:
+		c=dict()
+		c['start']=conf.get('start')
+		c['end']=conf.get('end')
+		self.panel_cache.append([conf['name']])
+		self.config_map[conf['name']]=c
+		
+	self.view.window().show_quick_panel(self.panel_cache, self.on_done)
+	
+	def on_done(self, index):
+		if index == -1:
+			return
+		name = self.panel_cache[index][0]
+		self.view.run_command("fold", self.config_map[name])
 
+class FoldCommand(sublime_plugin.TextCommand):
+	def run(self, edit, all=True, prompt=False, unfold=False):
+		if prompt:
+			self.view.run_command("fold_panel")
+		elif unfold:
+			if all:
+				self.view.run_command("unfold_all")
+			else:
+				self.view.run_command("unfold_current")
+		else:
+			if all:
+				self.view.run_command("fold_all")
+			else:
+				self.view.run_command("fold_current")
 
 class FoldAllCommand(sublime_plugin.TextCommand):
 	def run(self, edit):	

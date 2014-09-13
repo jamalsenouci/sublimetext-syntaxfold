@@ -1,4 +1,16 @@
 {
     "startMarker": "'#Section",
     "endMarker":"'#End",
+    "config":[
+        {
+        "name":"C#"
+        "startMarker":"region",
+        "endMarker":"endregion"
+        },
+        {
+        "name":"C+"
+        "startMarker":"#pragma region",
+        "endMarker":"#pragma endregion"
+        }
+        ]
 }

@@ -1,0 +1,17 @@
+[
+// Fold all code blocks
+  { "keys": ["alt+0", "alt+0"],
+    "command": "fold_all" },
+
+// Unfold all code blocks
+  { "keys": ["alt+shift+0", "alt+shift+0"],
+    "command": "unfold_all"},
+
+// Fold current code blocks
+  { "keys": ["alt+1", "alt+1"],
+    "command": "fold_current"},
+
+// Unfold current code blocks
+  { "keys": ["alt+shift+1", "alt+shift+1"],
+    "command": "unfold_current"}
+]
