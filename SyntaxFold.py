@@ -6,18 +6,24 @@ startMarker = s.get("startMarker")
 endMarker = s.get("endMarker")
 
 class FoldPanelCommand(sublime_plugin.TextCommand):
-	self.panel_cache = []
-	self.config_map = {}
-	configs = s.get("prompt_config")
-	for conf in configs:
-		c=dict()
-		c['start']=conf.get('start')
-		c['end']=conf.get('end')
-		self.panel_cache.append([conf['name']])
-		self.config_map[conf['name']]=c
-		
-	self.view.window().show_quick_panel(self.panel_cache, self.on_select)
-	
+	def run(self, edit):
+		self.panel_cache = []
+		self.config_map = {}
+		configs = s.get("config")
+		options=["Fold All", "Unfold All", "Fold Current", "Unfold Current"]
+		for conf in configs:
+			for opt in options:
+				c=dict()
+				c['startMarker']=conf.get('startMarker')
+				c['endMarker']=conf.get('endMarker')
+				if conf['name']=="Default":
+					descr=startMarker
+				else:
+					descr=str(conf.get('startMarker'))
+				self.panel_cache.append([opt+" "+conf['name'], descr ])
+				self.config_map[conf['name']]=c
+		self.view.window().show_quick_panel(self.panel_cache, self.on_select)
+
 	def on_select(self, index):
 		if index == -1:
 			return

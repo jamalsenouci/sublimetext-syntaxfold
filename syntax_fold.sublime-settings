@@ -3,6 +3,9 @@
     "endMarker":"'#End",
     "config":[
         {
+        "name":"Default",
+        },
+        {
         "name":"C#",
         "startMarker":"region",
         "endMarker":"endregion"
