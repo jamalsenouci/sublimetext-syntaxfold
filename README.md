@@ -1,4 +1,11 @@
-sublimetext-syntaxfold
+#SyntaxFold - Sublime Text Plugin
 ======================
 
-Sublime Text Plugin that provides a configurable command and popup for folding code based on syntax
+A plugin for [Sublime Text][st] 3 that folds code based on syntax rather than indent
+
+##Installation
+Clone this repository to your Sublime Text packages directory
+
+<!-- Links -->
+
+[st]: http://sublimetext.com/
