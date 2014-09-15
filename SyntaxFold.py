@@ -1,11 +1,10 @@
 import sublime, sublime_plugin , os, shutil
 
-default_settings=os.getcwd()+"\\SyntaxFold\\syntax_fold.sublime-settings"
-user_settings=os.getcwd()+"\\User\\syntax_fold.sublime-settings"
-
-if not os.path.exists(user_settings):
-    shutil.copyfile(default_settings,user_settings)
-
+#save off setings
+s = sublime.load_settings("syntax_fold.sublime-settings")
+baseconfig = s.get("config")
+s.set("config",baseconfig)
+sublime.save_settings("syntax_fold.sublime-settings")
 
 class FoldPanelCommand(sublime_plugin.TextCommand):
     def run(self, edit):
@@ -31,9 +30,7 @@ class FoldPanelCommand(sublime_plugin.TextCommand):
             return
         name = self.panel_cache[index][0].replace("Set Default: ","")
         if name =="Add Another":
-            print(os.getcwd())
-            print(user_settings)
-            self.view.window().open_file(user_settings)
+            self.view.window().open_file("$(packages)/User/syntax_fold.sublime-settings")
             print(True)
         else:
             s = sublime.load_settings('syntax_fold.sublime-settings')
