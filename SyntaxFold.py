@@ -1,9 +1,17 @@
-import sublime, sublime_plugin
+import sublime, sublime_plugin , os, shutil
+
+default_settings=os.getcwd()+"\\SyntaxFold\\syntax_fold.sublime-settings"
+user_settings=os.getcwd()+"\\User\\syntax_fold.sublime-settings"
+
+if not os.path.exists(user_settings):
+    shutil.copyfile(default_settings,user_settings)
+
 
 class FoldPanelCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         self.panel_cache = []
         self.config_map = {}
+        s = sublime.load_settings('syntax_fold.sublime-settings')
         configs = s.get("config")
         for conf in configs:
             c=dict()
@@ -15,17 +23,25 @@ class FoldPanelCommand(sublime_plugin.TextCommand):
                 descr=str(conf.get('startMarker'))
             self.panel_cache.append(["Set Default: "+conf['name'], descr ])
             self.config_map[conf['name']]=c
+        self.panel_cache.append(["Add Another", "edit config to add another lang" ])
         self.view.window().show_quick_panel(self.panel_cache, self.on_select)
 
     def on_select(self, index):
         if index == -1:
             return
         name = self.panel_cache[index][0].replace("Set Default: ","")
-        config=s.get("config")
-        newdef=config[index]
-        newdef['name']="Default"
-        s.set("default",newdef)
-        sublime.save_settings("syntax_fold.sublime-settings")
+        if name =="Add Another":
+            print(os.getcwd())
+            print(user_settings)
+            self.view.window().open_file(user_settings)
+            print(True)
+        else:
+            s = sublime.load_settings('syntax_fold.sublime-settings')
+            config=s.get("config")
+            newdef=config[index]
+            newdef['name']="Default"
+            s.set("default",newdef)
+            sublime.save_settings("syntax_fold.sublime-settings")
 
 class FoldAllCommand(sublime_plugin.TextCommand):
     def run(self, edit):

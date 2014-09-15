@@ -1,0 +1,35 @@
+[
+  // Package commands
+  { "caption": "SyntaxFold: Show Panel",
+    "command": "fold_panel"
+  },
+
+  { "caption": "SyntaxFold: Fold All Default",
+    "command": "fold_all"
+  },
+  { "caption": "SyntaxFold: Unfold All Default",
+    "command": "unfold_all"
+  },
+  { "caption": "SyntaxFold: Fold Current Default",
+    "command": "fold_current"
+  },
+  { "caption": "SyntaxFold: Unfold Current Default",
+    "command": "fold_current"
+  },
+
+  // Configuration files
+  { "caption": "SyntaxFold: Open README",
+    "command": "open_file",
+    "args": {"file": "${packages}/SyntaxFold/README.md"}
+  },
+
+  { "caption": "Preferences: SyntaxFold Settings - User",
+    "command": "open_file",
+    "args": {"file": "${packages}/User/syntax_fold.sublime-settings"}
+  },
+
+  { "caption": "Preferences: SyntaxFold Keybindings - Default",
+    "command": "open_file",
+    "args": {"file": "${packages}/SyntaxFold/Default ($platform).sublime-keymap"}
+  }
+]
