@@ -1,12 +1,13 @@
 import sublime, sublime_plugin
 
 class FoldPanelCommand(sublime_plugin.TextCommand):
-	#save off settings
-	s = sublime.load_settings("syntax_fold.sublime-settings")
-	baseconfig = s.get("config")
-	s.set("config",baseconfig)
-	sublime.save_settings("syntax_fold.sublime-settings")
+
     def run(self, edit):
+        #save off settings
+        s = sublime.load_settings("syntax_fold.sublime-settings")
+        baseconfig = s.get("config")
+        s.set("config",baseconfig)
+        sublime.save_settings("syntax_fold.sublime-settings")
         self.panel_cache = []
         self.config_map = {}
         s = sublime.load_settings('syntax_fold.sublime-settings')
