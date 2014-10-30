@@ -47,13 +47,23 @@ class FoldAllCommand(sublime_plugin.TextCommand):
         startMarker = config.get("startMarker")
         endMarker = config.get("endMarker")
         startpos = self.view.find_all(startMarker)
-        for x in range(len(startpos)):
-            startpos[x]=self.view.line(startpos[x].end()).end()
+        endpos=[]
+        if endMarker==None:
+            temp=[]
+            for x in range(len(startpos)):
+                temp.append(self.view.line(startpos[x].end()).end())
+            for x in range(len(startpos))[1:]:
+                endpos.append(self.view.line(startpos[x].end()).begin()-1)
+            endpos.append(self.view.size())
+            startpos=temp
+        else:    
+            for x in range(len(startpos)):
+                startpos[x]=self.view.line(startpos[x].end()).end()
 
-        endpos = self.view.find_all(endMarker)
-        for x in range(len(startpos)):
-            endpos[x]=self.view.line(endpos[x].begin()).begin() - 1
-        
+            endpos = self.view.find_all(endMarker)
+            for x in range(len(startpos)):
+                endpos[x]=self.view.line(endpos[x].begin()).begin() - 1
+
         for x in range( len(endpos)):
             content = sublime.Region(startpos[x], endpos[x])
             new_content=[content]
@@ -70,12 +80,22 @@ class UnfoldAllCommand(sublime_plugin.TextCommand):
         endMarker = config.get("endMarker")
 
         startpos = self.view.find_all(startMarker)
-        for x in range(len(startpos)):
-            startpos[x]=self.view.line(startpos[x].end()).end()
-        
-        endpos = self.view.find_all(endMarker)
-        for x in range(len(startpos)):
-            endpos[x]=endpos[x].begin()
+        endpos=[]
+        if endMarker==None:
+            temp=[]
+            for x in range(len(startpos)):
+                temp.append(self.view.line(startpos[x].end()).end())
+            for x in range(len(startpos))[1:]:
+                endpos.append(self.view.line(startpos[x].end()).begin()-1)
+            endpos.append(self.view.size())
+            startpos=temp
+        else:    
+            for x in range(len(startpos)):
+                startpos[x]=self.view.line(startpos[x].end()).end()
+
+            endpos = self.view.find_all(endMarker)
+            for x in range(len(startpos)):
+                endpos[x]=self.view.line(endpos[x].begin()).begin() 
 
         for x in range( len(endpos)):
             content = sublime.Region(startpos[x], endpos[x])
@@ -101,11 +121,19 @@ class FoldCurrentCommand(sublime_plugin.TextCommand):
 
         endStart=[]
         endEnd=[]
-        ends = self.view.find_all(endMarker)
-        for x in range(len(ends)):
-            endStart.append(ends[x].begin()-1)
-            endEnd.append(ends[x].end())
-        
+        if endMarker==None:
+            ends = sections[1:]
+            for x in range(len(ends)):
+                endStart.append(ends[x].begin()-1)
+                endEnd.append(ends[x].end())
+            endStart.append(self.view.size())
+            endEnd.append(self.view.size())
+        else:
+            ends = self.view.find_all(endMarker)
+            for x in range(len(ends)):
+                endStart.append(ends[x].begin()-1)
+                endEnd.append(ends[x].end())
+            
         selection=self.view.sel()[0]
         for x in range(len(sectionStart)):
             if (sectionStart[x] < selection.begin()) and (endEnd[x] > selection.end()):
@@ -132,10 +160,18 @@ class UnfoldCurrentCommand(sublime_plugin.TextCommand):
 
         endStart=[]
         endEnd=[]
-        ends = self.view.find_all(endMarker)
-        for x in range(len(ends)):
-            endStart.append(ends[x].begin()-1)
-            endEnd.append(ends[x].end())
+        if endMarker==None:
+            ends = sections[1:]
+            for x in range(len(ends)):
+                endStart.append(ends[x].begin()-1)
+                endEnd.append(ends[x].end())
+            endStart.append(self.view.size())
+            endEnd.append(self.view.size())
+        else:
+            ends = self.view.find_all(endMarker)
+            for x in range(len(ends)):
+                endStart.append(ends[x].begin()-1)
+                endEnd.append(ends[x].end())
         
         selection=self.view.sel()[0]
         for x in range(len(sectionStart)):
