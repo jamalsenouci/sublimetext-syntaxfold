@@ -1,25 +1,37 @@
 #SyntaxFold - Sublime Text Plugin
 
-A plugin for [Sublime Text][st] 3 that folds code based on syntax rather than indent
+A plugin for [Sublime Text][st] 3 that folds code blocks based on syntax rather than indent.  
+
+##Background
+This plugin was created for a language that uses named regions similar to languages like VB, C++ and C# (see [here][vs]). Where possible use a plugin created specifically for your syntax.
 
 ##Installation
-Clone this repository to your Sublime Text packages directory
+* Use [Sublime Package Control](http://wbond.net/sublime_packages/package_control "Sublime Package Control")
+* `ctrl+shift+p` then select `Package Control: Install Package`
+* Install SyntaxFold
 
-<!-- Links -->
+Alternatively Clone this repository to your Sublime Text packages directory
 
-[st]: http://sublimetext.com/
 
 ###Setup
-On first use open the quick panel <kbd>shift</kbd>+<kbd>F5</kbd> once to set any custom fold markers and again to set your default marker.
+* On first use open the quick panel <kbd>shift</kbd>+<kbd>F5</kbd> 
+
+![][add-another]
+* select add another to set any custom fold markers
+
+![][custom-fold]
+* open the quick panel <kbd>shift</kbd>+<kbd>F5</kbd> again to set your default marker
+
+
+* You can specify start and end markers, or if you just specify the start marker then it will fold up to the next start marker.
+
+![][scr-panel-thumb]
+
 
 ## Usage
 Use the [keybindings](#command-examples) to fold/unfold your code
 
-### Screenshot
-
-[![][scr-panel-thumb]][scr-panel]
-
-### Command Examples ###
+### Key Bindings ###
 
 The following is an excerpt of the default key bindings:
 
@@ -50,6 +62,9 @@ The following is an excerpt of the default key bindings:
 
 ### Command Reference
 
+A list of commands have been added to the command palette and can be accessed using `Ctrl+Shift+P`.
+all commands start with "SyntaxFold : command name"
+
 ***fold_panel***
 
 Open a quick panel to set default language and specify custom fold markers
@@ -69,8 +84,9 @@ Unfolds code block that cursor is in
 
 
 <!-- Links -->
-
+[vs]:http://blogs.msdn.com/b/zainnab/archive/2013/07/12/visual-studio-2013-organize-your-code-with-named-regions.aspx
 [st]: http://sublimetext.com/
 [scr-panel]: http://i.imgur.com/wY7RlyI.jpg
 [scr-panel-thumb]: http://i.imgur.com/wY7RlyI.jpg
-
+[custom-fold]: http://i.imgur.com/7bxfhkO.jpg
+[add-another]: http://i.imgur.com/qNBUUbI.jpg
