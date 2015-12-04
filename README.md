@@ -17,7 +17,7 @@ Alternatively Clone this repository to your Sublime Text packages directory
 * On first use open the quick panel <kbd>shift</kbd>+<kbd>F5</kbd> 
 
 ![][add-another]
-* select add another to set any custom fold markers
+* select add another to set any custom fold markers. If your markers contain special characters then escape them by preceding them with a /.
 
 ![][custom-fold]
 * open the quick panel <kbd>shift</kbd>+<kbd>F5</kbd> again to set your default marker
