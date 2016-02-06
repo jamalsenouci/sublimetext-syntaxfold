@@ -1,6 +1,8 @@
 #SyntaxFold - Sublime Text Plugin
 
-A plugin for [Sublime Text][st] 3 that folds code blocks based on syntax rather than indent.  
+A plugin for [Sublime Text][st] 3 that folds code blocks based on syntax rather than indent. 
+
+<i>Note: This does not create the folding markers as the functionality for creating that is not exposed within the sublime text api but this plugin allows us to fold based on keyboard shortcuts and the command panel.</i>
 
 ##Background
 This plugin was created for a language that uses named regions similar to languages like VB, C++ and C# (see [here][vs]). Where possible use a plugin created specifically for your syntax.
