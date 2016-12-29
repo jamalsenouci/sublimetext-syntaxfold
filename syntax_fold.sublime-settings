@@ -1,19 +1,19 @@
 {
     "config":[
         {
-        "name":"Example",
-        "startMarker": "'#Start",
-        "endMarker":"'#End"     
+            "scope": "source.java",
+            "startMarker": "//region",
+            "endMarker":"//endregion"
         },
         {
-        "name":"C#",
-        "startMarker":"#region",
-        "endMarker":"#endregion"
+            "scope": "source.cs",
+            "startMarker":"#region",
+            "endMarker":"#endregion"
         },
         {
-        "name":"C+",
-        "startMarker":"#pragma region",
-        "endMarker":"#pragma endregion"
+            "scope": "source.c++",
+            "startMarker":"#pragma region",
+            "endMarker":"#pragma endregion"
         }
     ]
 }

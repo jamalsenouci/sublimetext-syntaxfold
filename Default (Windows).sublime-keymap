@@ -14,8 +14,4 @@
 // Unfold current code blocks
   { "keys": ["alt+shift+1", "alt+shift+1"],
     "command": "unfold_current"},
-
-// Open quick panel to change default language
-  { "keys": ["shift+f5"],
-    "command": "fold_panel"}
 ]
