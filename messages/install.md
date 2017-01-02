@@ -3,15 +3,16 @@ SyntaxFold
 
 Folds Code based on any pre-specified fold markers
 
-Key Bindings (and Examples)
+Key Bindings
 ---------------------------
+"Preferences -> Package Settings -> SyntaxFold -> Key Bindings - Default"
 
-Open the Command Palette and select "Preferences: SyntaxFold Keybindings - Default".
 
 Settings
 --------
 
-"Preferences: SyntaxFold Settings - User" for an overview of available settings.
+"Preferences -> Package Settings -> SyntaxFold -> Settings - Default"
+"Preferences -> Package Settings -> SyntaxFold -> Settings - User"
 
 For more information, refer to the README:
 - "SyntaxFold: Open README"

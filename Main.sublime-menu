@@ -12,6 +12,11 @@
                         "children":
                         [
                             {
+                                "caption": "Settings - Defalut",
+                                "command": "open_file",
+                                "args": {"file": "${packages}/SyntaxFold/syntax_fold.sublime-settings"}
+                            },
+                            {
                                 "caption": "Settings - User",
                                 "command": "open_file",
                                 "args": {"file": "${packages}/User/syntax_fold.sublime-settings"}
