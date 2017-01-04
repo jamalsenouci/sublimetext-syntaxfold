@@ -1,183 +1,194 @@
-import sublime, sublime_plugin, os, shutil
+import os
+import shutil
+import sublime
+import sublime_plugin
+
 
 def plugin_loaded():
-    if not os.path.exists(sublime.packages_path()+"/User/syntax_fold.sublime-settings"):
-        print(sublime.packages_path())
-        shutil.copyfile(sublime.packages_path()+"/SyntaxFold/syntax_fold.sublime-settings", sublime.packages_path()+"/User/syntax_fold.sublime-settings")
+    user_settings_path = os.path.join(
+        sublime.packages_path(),
+        "User",
+        "syntax_fold.sublime-settings")
+
+    if not os.path.exists(user_settings_path):
+        default_settings_path = os.path.join(
+            sublime.packages_path(),
+            "SyntaxFold",
+            "syntax_fold.sublime-settings")
+
+        shutil.copyfile(default_settings_path, user_settings_path)
 
 
+def get_source_scope(view):
+    all_scopes = view.scope_name(view.sel()[0].begin())
+    split_scopes = all_scopes.split(" ")
+    for scope in split_scopes:
+        if scope.find("source.") != -1:
+            return scope
+    return None
 
-class FoldPanelCommand(sublime_plugin.TextCommand):
+
+def get_markers(view):
+    source_scope = get_source_scope(view)
+    settings = sublime.load_settings("syntax_fold.sublime-settings")
+    configs = settings.get("config")
+    start_marker = None
+    end_marker = None
+    for config_object in configs:
+        config_scope = config_object.get("scope", "")
+
+        # allow for comma seperated source specifications
+        if source_scope in config_scope:
+            start_marker = config_object.get("startMarker", None)
+            end_marker = config_object.get("endMarker", None)
+
+    return start_marker, end_marker
+
+
+def get_all_positions(view):
+
+    start_marker, end_marker = get_markers(view)
+    if start_marker is None:
+        print("SyntaxFold: At least start marker must be specified. "
+              "Aborting request.")
+        return None, None
+
+    start_positions = []
+    end_positions = []
+
+    # fill start positions
+    start_markers = view.find_all(start_marker)
+    for marker in start_markers:
+        start_positions.append(view.line(marker.end()).end())
+
+    # fill end positions
+    if end_marker is not None:
+        end_markers = view.find_all(end_marker)
+        for marker in end_markers:
+            end_positions.append(view.line(marker.begin()).begin()-1)
+
+    # If no end marker specified
+    # utilize the next start marker as the end position
+    else:
+        for index in range(0, len(start_positions)-1):
+            end_positions.append(view.line(start_positions[index+1]).begin()-1)
+
+    end_positions_len = len(end_positions)
+    start_positions_len = len(start_positions)
+
+    if start_positions_len == 0 and end_positions_len == 0:
+        print("SyntaxFold: No start markers or end markers found in file. "
+              "Aborting request.")
+        return None, None
+
+    return start_positions, end_positions
+
+
+def get_all_fold_regions(view):
+
+    start_positions, end_positions = get_all_positions(view)
+
+    regions = []
+    last_matched_end_pos = -1
+    if start_positions is None or end_positions is None:
+        return None
+
+    for end_pos in end_positions:
+        last_matched_start_pos = -1
+        for start_pos in start_positions:
+
+            # if the start pos is beyond the position of
+            # the end pos it isn"t a match
+            if start_pos > end_pos:
+                break
+
+            # The start pos must be greater or equal to then the
+            # last matched end post when matching
+            elif start_pos > last_matched_end_pos:
+                last_matched_start_pos = start_pos
+
+        if last_matched_start_pos != -1:
+            start_match_position = view.line(last_matched_start_pos-1).begin()
+            end_match_position = view.line(end_pos+1).end()
+            last_matched_end_pos = end_pos
+            regions.append((
+                last_matched_start_pos,
+                end_pos,
+                start_match_position,
+                end_match_position))
+
+    if len(regions) == 0:
+        return None
+
+    return regions
+
+
+def operation_on_all_regions(fold_regions, operation):
+
+    regions = []
+    for fold_region in fold_regions:
+        regions.append(sublime.Region(fold_region[0], fold_region[1]))
+
+    operation(regions)
+
+
+def operation_on_selected_region(view, fold_regions, operation):
+
+    selection = view.sel()[0]
+
+    for fold_region in fold_regions:
+        if (fold_region[2] <= selection.begin()
+                and fold_region[3] >= selection.end()):
+            content = [sublime.Region(fold_region[0], fold_region[1])]
+            operation(content)
+            break
+
+
+#
+# Operations
+#
+class FoldCommands(sublime_plugin.TextCommand):
+
+    def fold(self, regions):
+        if len(regions) > 0:
+            self.view.fold(regions)
+
+    def unfold(self, regions):
+        if len(regions) > 0:
+            self.view.unfold(regions)
+
+
+class FoldAllCommand(FoldCommands):
     def run(self, edit):
-        self.panel_cache = []
-        self.config_map = {}
-        s = sublime.load_settings('syntax_fold.sublime-settings')
-        configs = s.get("config")
-        for conf in configs:
-            c=dict()
-            c['startMarker']=conf.get('startMarker')
-            c['endMarker']=conf.get('endMarker')
-            if conf['name']=="Default":
-                descr=startMarker
-            else:
-                descr=str(conf.get('startMarker'))
-            self.panel_cache.append(["Set Default: "+conf['name'], descr ])
-            self.config_map[conf['name']]=c
-        self.panel_cache.append(["Add Another", "edit config to add another lang" ])
-        self.view.window().show_quick_panel(self.panel_cache, self.on_select)
-
-    def on_select(self, index):
-        if index == -1:
+        fold_regions = get_all_fold_regions(self.view)
+        if fold_regions is None:
             return
-        name = self.panel_cache[index][0].replace("Set Default: ","")
-        if name =="Add Another":           
-            self.view.window().open_file(sublime.packages_path()+"/User/syntax_fold.sublime-settings")
-        else:
-            s = sublime.load_settings('syntax_fold.sublime-settings')
-            config=s.get("config")
-            newdef=config[index]
-            newdef['name']="Default"
-            s.set("default",newdef)
-            sublime.save_settings("syntax_fold.sublime-settings")
 
-class FoldAllCommand(sublime_plugin.TextCommand):
+        operation_on_all_regions(fold_regions, self.fold)
+
+
+class UnfoldAllCommand(FoldCommands):
     def run(self, edit):
-        s = sublime.load_settings('syntax_fold.sublime-settings')
-        config=s.get('default')
-        startMarker = config.get("startMarker")
-        endMarker = config.get("endMarker")
-        startpos = self.view.find_all(startMarker)
-        endpos=[]
-        if endMarker==None:
-            temp=[]
-            for x in range(len(startpos)):
-                temp.append(self.view.line(startpos[x].end()).end())
-            for x in range(len(startpos))[1:]:
-                endpos.append(self.view.line(startpos[x].end()).begin()-1)
-            endpos.append(self.view.size())
-            startpos=temp
-        else:    
-            for x in range(len(startpos)):
-                startpos[x]=self.view.line(startpos[x].end()).end()
+        fold_regions = get_all_fold_regions(self.view)
+        if fold_regions is None:
+            return
 
-            endpos = self.view.find_all(endMarker)
-            for x in range(len(startpos)):
-                endpos[x]=self.view.line(endpos[x].begin()).begin() - 1
+        operation_on_all_regions(fold_regions, self.unfold)
 
-        for x in range( len(endpos)):
-            content = sublime.Region(startpos[x], endpos[x])
-            new_content=[content]
-            if content.size() > 0:
-                if self.view.fold(content) == False:
-                    new_content = self.view.fold(content)
-            self.selection = new_content
 
-class UnfoldAllCommand(sublime_plugin.TextCommand):
+class FoldCurrentCommand(FoldCommands):
     def run(self, edit):
-        s = sublime.load_settings('syntax_fold.sublime-settings')
-        config=s.get('default')
-        startMarker = config.get("startMarker")
-        endMarker = config.get("endMarker")
+        fold_regions = get_all_fold_regions(self.view)
+        if fold_regions is None:
+            return
 
-        startpos = self.view.find_all(startMarker)
-        endpos=[]
-        if endMarker==None:
-            temp=[]
-            for x in range(len(startpos)):
-                temp.append(self.view.line(startpos[x].end()).end())
-            for x in range(len(startpos))[1:]:
-                endpos.append(self.view.line(startpos[x].end()).begin()-1)
-            endpos.append(self.view.size())
-            startpos=temp
-        else:    
-            for x in range(len(startpos)):
-                startpos[x]=self.view.line(startpos[x].end()).end()
+        operation_on_selected_region(self.view, fold_regions, self.fold)
 
-            endpos = self.view.find_all(endMarker)
-            for x in range(len(startpos)):
-                endpos[x]=self.view.line(endpos[x].begin()).begin() 
 
-        for x in range( len(endpos)):
-            content = sublime.Region(startpos[x], endpos[x])
-            new_content=[content]
-            if content.size() > 0:
-                new_content = self.view.unfold(content)
-            self.selection = new_content
-
-class FoldCurrentCommand(sublime_plugin.TextCommand):
+class UnfoldCurrentCommand(FoldCommands):
     def run(self, edit):
-        s = sublime.load_settings('syntax_fold.sublime-settings')
-        config=s.get('default')
-        startMarker = config.get("startMarker")
-        endMarker = config.get("endMarker")
-        sections = self.view.find_all(startMarker)
-        sectionStart=[]
-        sectionEnd=[]
-        sectionLineEnd=[]
-        for x in range(len(sections)):
-            sectionStart.append(sections[x].begin())
-            sectionEnd.append(sections[x].end())
-            sectionLineEnd.append(self.view.line(sections[x].end()).end())
+        fold_regions = get_all_fold_regions(self.view)
+        if fold_regions is None:
+            return
 
-        endStart=[]
-        endEnd=[]
-        if endMarker==None:
-            ends = sections[1:]
-            for x in range(len(ends)):
-                endStart.append(ends[x].begin()-1)
-                endEnd.append(ends[x].end())
-            endStart.append(self.view.size())
-            endEnd.append(self.view.size())
-        else:
-            ends = self.view.find_all(endMarker)
-            for x in range(len(ends)):
-                endStart.append(ends[x].begin()-1)
-                endEnd.append(ends[x].end())
-            
-        selection=self.view.sel()[0]
-        for x in range(len(sectionStart)):
-            if (sectionStart[x] < selection.begin()) and (endEnd[x] > selection.end()):
-                content = sublime.Region(sectionLineEnd[x], endStart[x])
-                new_content=[content]
-                if content.size() > 0:
-                    new_content = self.view.fold(content)
-                self.selection = new_content
-
-class UnfoldCurrentCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        s = sublime.load_settings('syntax_fold.sublime-settings')
-        config=s.get('default')
-        startMarker = config.get("startMarker")
-        endMarker = config.get("endMarker")
-        sections = self.view.find_all(startMarker)
-        sectionStart=[]
-        sectionEnd=[]
-        sectionLineEnd=[]
-        for x in range(len(sections)):
-            sectionStart.append(sections[x].begin())
-            sectionEnd.append(sections[x].end())
-            sectionLineEnd.append(self.view.line(sections[x].end()).end())
-
-        endStart=[]
-        endEnd=[]
-        if endMarker==None:
-            ends = sections[1:]
-            for x in range(len(ends)):
-                endStart.append(ends[x].begin()-1)
-                endEnd.append(ends[x].end())
-            endStart.append(self.view.size())
-            endEnd.append(self.view.size())
-        else:
-            ends = self.view.find_all(endMarker)
-            for x in range(len(ends)):
-                endStart.append(ends[x].begin()-1)
-                endEnd.append(ends[x].end())
-        
-        selection=self.view.sel()[0]
-        for x in range(len(sectionStart)):
-            if (sectionStart[x] < selection.begin()) and (endEnd[x] > selection.end()):
-                content = sublime.Region(sectionLineEnd[x], endStart[x])
-                new_content=[content]
-                if content.size() > 0:
-                    new_content = self.view.unfold(content)
-                self.selection = new_content
+        operation_on_selected_region(self.view, fold_regions, self.unfold)
