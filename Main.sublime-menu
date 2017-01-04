@@ -12,7 +12,7 @@
                         "children":
                         [
                             {
-                                "caption": "Settings - Defalut",
+                                "caption": "Settings - Default",
                                 "command": "open_file",
                                 "args": {"file": "${packages}/SyntaxFold/syntax_fold.sublime-settings"}
                             },
