@@ -30,6 +30,10 @@ def get_source_scope(view):
 
 def get_markers(view):
     source_scope = get_source_scope(view)
+    if source_scope is None:
+        print("SyntaxFold: No source scope was found. ")
+        return None, None
+
     settings = sublime.load_settings("syntax_fold.sublime-settings")
     configs = settings.get("config")
     start_marker = None
