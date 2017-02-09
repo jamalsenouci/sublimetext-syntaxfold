@@ -76,6 +76,7 @@ def get_all_positions(view):
     else:
         for index in range(0, len(start_positions)-1):
             end_positions.append(view.line(start_positions[index+1]).begin()-1)
+        end_positions.append(view.size())
 
     end_positions_len = len(end_positions)
     start_positions_len = len(start_positions)
