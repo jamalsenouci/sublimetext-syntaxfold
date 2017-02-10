@@ -25,6 +25,8 @@ def get_source_scope(view):
     for scope in split_scopes:
         if scope.find("source.") != -1:
             return scope
+        if scope.find("embedding.") != -1:
+            return scope
     return None
 
 
