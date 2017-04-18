@@ -1,4 +1,4 @@
-#SyntaxFold - Sublime Text Plugin
+# SyntaxFold - Sublime Text Plugin
 
 A plugin for [Sublime Text][st] 3 that folds/collapses or unfolds/expands code blocks based on specific syntax defined by the User rather than indent.
 
@@ -51,7 +51,7 @@ The settings file can be accessed through `Preferences -> Package Settings -> Se
 }
 ```
 
-Add or remove fold region objects to meet your needs.  Note the `scope` key. Utilize this key to filter which source file types for which the start and end markers are active. To determine the scope name for a file type use `Tools -> Developer -> Show Scope Name' or <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>.
+Add or remove fold region objects to meet your needs.  Note the `scope` key. Utilize this key to filter which source file types for which the start and end markers are active. To determine the scope name for a file type use `Tools -> Developer -> Show Scope Name` or <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>.
 
 The `scope` key can contain a comma separated list of scopes for which the markers should be active.  For example:
 
@@ -101,19 +101,19 @@ The following is an excerpt of the default key bindings:
 A list of commands have been added to the command palette and can be accessed using <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>.
 All commands start with "SyntaxFold : [command name]".
 
-***Fold All***
+***Fold All***:
 Fold/collapse all syntax delimited blocks in the current document.
 
-***Unfold all***
+***Unfold all***:
 Unfold/expand all syntax delimited blocks in the current document.
 
-***Fold Current***
+***Fold Current***:
 Folds/collapses the syntax delimited block where the cursor is placed on.
 
-***Unfold Current***
-Unfolds/expabds the syntax delimited block where the cursor is placed on.
+***Unfold Current***:
+Unfolds/expands the syntax delimited block where the cursor is placed on.
 
-***Open README***
+***Open README***:
 Open this readme file.
 
 
