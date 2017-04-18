@@ -6,7 +6,7 @@
             "endMarker":"//endregion"
         },
         {
-            "scope": "source.cs, source.js",
+            "scope": "source.cs",
             "startMarker":"#region",
             "endMarker":"#endregion"
         },
