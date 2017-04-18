@@ -6,7 +6,7 @@
             "endMarker":"//endregion"
         },
         {
-            "scope": "source.cs",
+            "scope": "source.cs, source.js",
             "startMarker":"#region",
             "endMarker":"#endregion"
         },
@@ -14,6 +14,16 @@
             "scope": "source.c++",
             "startMarker":"#pragma region",
             "endMarker":"#pragma endregion"
+        },
+        {
+            "scope": "text.html.basic",
+            "startMarker":"<!--region-->",
+            "endMarker":"<!--endregion-->"
+        },
+        {
+            "scope": "text.plain",
+            "startMarker":"---region---",
+            "endMarker":"---endregion---"
         }
     ]
 }

@@ -23,9 +23,9 @@ def get_source_scope(view):
     all_scopes = view.scope_name(view.sel()[0].begin())
     split_scopes = all_scopes.split(" ")
     for scope in split_scopes:
-        if scope.find("source.") != -1:
-            return scope
-        if scope.find("embedding.") != -1:
+        if scope.find("source.") != -1  or \
+         scope.find("embedding.") != -1 or \
+         scope.find("text.") != -1:
             return scope
     return None
 
