@@ -23,3 +23,9 @@ v2.1.0 (2017-04-18)
 -------------------
 
 - Added folding support to files containing `text` in their scope name, allowing HTML files to be folded (`text.html.basic` scope).
+
+
+v2.2.0 (2017-05-01)
+-------------------
+
+- Modified the current region folding commands (fold and unfold) in order to toggle-fold in a single command. Edited the settings in order to use the same markers for folding in other languages (reduced the example in README.md).

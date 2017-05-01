@@ -23,7 +23,7 @@ The settings file can be accessed through `Preferences -> Package Settings -> Se
 {
     "config":[
         {
-            "scope": "source.java, source.js",
+            "scope": "source.java, source.js, embedding.php",
             "startMarker": "//region",
             "endMarker":"//endregion"
         },
@@ -33,7 +33,7 @@ The settings file can be accessed through `Preferences -> Package Settings -> Se
             "endMarker":"#endregion"
         },
         {
-            "scope": "source.c++",
+            "scope": "source.c++, source.c",
             "startMarker":"#pragma region",
             "endMarker":"#pragma endregion"
         },
@@ -53,19 +53,6 @@ The settings file can be accessed through `Preferences -> Package Settings -> Se
 
 Add or remove fold region objects to meet your needs.  Note the `scope` key. Utilize this key to filter which source file types for which the start and end markers are active. To determine the scope name for a file type use `Tools -> Developer -> Show Scope Name` or <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>.
 
-The `scope` key can contain a comma separated list of scopes for which the markers should be active.  For example:
-
-```json
-.
-.
-.
-  {
-    "scope": "source.c++, source.c",
-    "startMarker": "#pragma region",
-    "endMarker": "#pragma endregion"
-  }
-```
-These fold markers would be active for c++ and c source files.
 
 
 ## Usage
@@ -85,15 +72,10 @@ The following is an excerpt of the default key bindings:
   { "keys": ["alt+shift+0", "alt+shift+0"],
     "command": "unfold_all"},
 
-// Fold current code blocks
+// Toggle fold current code block
   { "keys": ["alt+1", "alt+1"],
-    "command": "fold_current"},
-
-// Unfold current code blocks
-  { "keys": ["alt+shift+1", "alt+shift+1"],
-    "command": "unfold_current"},
+    "command": "toggle_fold_current"},
 ]
-
 ```
 
 ### Command Reference
@@ -107,11 +89,8 @@ Fold/collapse all syntax delimited blocks in the current document.
 ***Unfold all***:
 Unfold/expand all syntax delimited blocks in the current document.
 
-***Fold Current***:
-Folds/collapses the syntax delimited block where the cursor is placed on.
-
-***Unfold Current***:
-Unfolds/expands the syntax delimited block where the cursor is placed on.
+***Toggle Fold Current***:
+Folds/collapses or Unfolds/expands the syntax delimited block where the cursor is placed on.
 
 ***Open README***:
 Open this readme file.

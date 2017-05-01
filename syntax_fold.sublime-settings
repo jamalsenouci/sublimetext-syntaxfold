@@ -1,7 +1,7 @@
 {
     "config":[
         {
-            "scope": "source.java",
+            "scope": "source.java, source.js, embedding.php",
             "startMarker": "//region",
             "endMarker":"//endregion"
         },
@@ -11,7 +11,7 @@
             "endMarker":"#endregion"
         },
         {
-            "scope": "source.c++",
+            "scope": "source.c++, source.c",
             "startMarker":"#pragma region",
             "endMarker":"#pragma endregion"
         },
