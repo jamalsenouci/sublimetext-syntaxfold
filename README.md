@@ -53,6 +53,7 @@ The settings file can be accessed through `Preferences -> Package Settings -> Se
 
 Add or remove fold region objects to meet your needs.  Note the `scope` key. Utilize this key to filter which source file types for which the start and end markers are active. To determine the scope name for a file type use `Tools -> Developer -> Show Scope Name` or <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>.
 
+The `scope` key may contain a comma separated list of scopes for which the markers should be active. The settings file above supports, for example, Java, Javascript and PHP files folding through the same `//region` and `//endregion` markers since the defined scope is `"source.java, source.js, embedding.php"`.
 
 
 ## Usage
