@@ -10,11 +10,8 @@
   { "caption": "SyntaxFold: Unfold All",
     "command": "unfold_all"
   },
-  { "caption": "SyntaxFold: Fold Current",
-    "command": "fold_current"
-  },
-  { "caption": "SyntaxFold: Unfold Current",
-    "command": "fold_current"
+  { "caption": "SyntaxFold: Toggle Fold Current",
+    "command": "toggle_fold_current"
   },
 
   // Configuration files

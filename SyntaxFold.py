@@ -3,7 +3,6 @@ import shutil
 import sublime
 import sublime_plugin
 
-
 def plugin_loaded():
     user_settings_path = os.path.join(
         sublime.packages_path(),
@@ -23,9 +22,9 @@ def get_source_scope(view):
     all_scopes = view.scope_name(view.sel()[0].begin())
     split_scopes = all_scopes.split(" ")
     for scope in split_scopes:
-        if scope.find("source.") != -1:
-            return scope
-        if scope.find("embedding.") != -1:
+        if scope.find("source.") != -1  or \
+         scope.find("embedding.") != -1 or \
+         scope.find("text.") != -1:
             return scope
     return None
 
@@ -139,9 +138,7 @@ def operation_on_all_regions(fold_regions, operation):
     operation(regions)
 
 
-def operation_on_selected_region(view, fold_regions, operation):
-
-    selection = view.sel()[0]
+def operation_on_selected_region(selection, fold_regions, operation):
 
     for fold_region in fold_regions:
         if (fold_region[2] <= selection.begin()
@@ -183,19 +180,15 @@ class UnfoldAllCommand(FoldCommands):
         operation_on_all_regions(fold_regions, self.unfold)
 
 
-class FoldCurrentCommand(FoldCommands):
+class ToggleFoldCurrentCommand(FoldCommands):
     def run(self, edit):
         fold_regions = get_all_fold_regions(self.view)
         if fold_regions is None:
             return
+        
+        selection = self.view.sel()[0]
 
-        operation_on_selected_region(self.view, fold_regions, self.fold)
-
-
-class UnfoldCurrentCommand(FoldCommands):
-    def run(self, edit):
-        fold_regions = get_all_fold_regions(self.view)
-        if fold_regions is None:
-            return
-
-        operation_on_selected_region(self.view, fold_regions, self.unfold)
+        if self.view.is_folded(selection):
+            operation_on_selected_region(selection, fold_regions, self.unfold)
+        else:
+            operation_on_selected_region(selection, fold_regions, self.fold)
