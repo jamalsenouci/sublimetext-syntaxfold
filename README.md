@@ -96,6 +96,10 @@ Folds/collapses or Unfolds/expands the syntax delimited block where the cursor i
 ***Open README***:
 Open this readme file.
 
+### Saving fold state
+
+This package doesn't support saving the folded state of a file (remembering which blocks you have folded) but there is a package called BufferScroll perfectly suited to that https://packagecontrol.io/packages/BufferScroll
+
 
 <!-- Links -->
 [vs]:http://blogs.msdn.com/b/zainnab/archive/2013/07/12/visual-studio-2013-organize-your-code-with-named-regions.aspx
