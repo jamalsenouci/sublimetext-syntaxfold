@@ -37,6 +37,8 @@ def get_markers(view):
 
     settings = sublime.load_settings("syntax_fold.sublime-settings")
     configs = settings.get("config")
+    start_marker = None
+    end_marker = None
     marker_pairs = []
     for config_object in configs:
         config_scope = config_object.get("scope", "")
