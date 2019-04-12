@@ -37,8 +37,7 @@ def get_markers(view):
 
     settings = sublime.load_settings("syntax_fold.sublime-settings")
     configs = settings.get("config")
-    start_marker = None
-    end_marker = None
+    marker_pairs = []
     for config_object in configs:
         config_scope = config_object.get("scope", "")
 
@@ -46,13 +45,14 @@ def get_markers(view):
         if source_scope in config_scope:
             start_marker = config_object.get("startMarker", None)
             end_marker = config_object.get("endMarker", None)
+            marker_pairs.append((start_marker,end_marker))
 
-    return start_marker, end_marker
+    return marker_pairs
 
 
-def get_all_positions(view):
+def get_all_positions(view,marker_pair):
 
-    start_marker, end_marker = get_markers(view)
+    start_marker, end_marker = marker_pair
     if start_marker is None:
         print("SyntaxFold: At least start marker must be specified. "
               "Aborting request.")
@@ -92,36 +92,37 @@ def get_all_positions(view):
 
 def get_all_fold_regions(view):
 
-    start_positions, end_positions = get_all_positions(view)
-
     regions = []
-    last_matched_end_pos = -1
-    if start_positions is None or end_positions is None:
-        return None
+    for marker_pair in get_markers(view):
+        start_positions, end_positions = get_all_positions(view,marker_pair)
 
-    for end_pos in end_positions:
-        last_matched_start_pos = -1
-        for start_pos in start_positions:
+        last_matched_end_pos = -1
+        if start_positions is None or end_positions is None:
+            return None
 
-            # if the start pos is beyond the position of
-            # the end pos it isn"t a match
-            if start_pos > end_pos:
-                break
+        for end_pos in end_positions:
+            last_matched_start_pos = -1
+            for start_pos in start_positions:
 
-            # The start pos must be greater or equal to then the
-            # last matched end post when matching
-            elif start_pos > last_matched_end_pos:
-                last_matched_start_pos = start_pos
+                # if the start pos is beyond the position of
+                # the end pos it isn"t a match
+                if start_pos > end_pos:
+                    break
 
-        if last_matched_start_pos != -1:
-            start_match_position = view.line(last_matched_start_pos-1).begin()
-            end_match_position = view.line(end_pos+1).end()
-            last_matched_end_pos = end_pos
-            regions.append((
-                last_matched_start_pos,
-                end_pos,
-                start_match_position,
-                end_match_position))
+                # The start pos must be greater or equal to then the
+                # last matched end post when matching
+                elif start_pos > last_matched_end_pos:
+                    last_matched_start_pos = start_pos
+
+            if last_matched_start_pos != -1:
+                start_match_position = view.line(last_matched_start_pos-1).begin()
+                end_match_position = view.line(end_pos+1).end()
+                last_matched_end_pos = end_pos
+                regions.append((
+                    last_matched_start_pos,
+                    end_pos,
+                    start_match_position,
+                    end_match_position))
 
     if len(regions) == 0:
         return None
@@ -185,7 +186,7 @@ class ToggleFoldCurrentCommand(FoldCommands):
         fold_regions = get_all_fold_regions(self.view)
         if fold_regions is None:
             return
-        
+
         selection = self.view.sel()[0]
 
         if self.view.is_folded(selection):
