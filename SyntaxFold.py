@@ -85,8 +85,7 @@ def get_all_positions(view,marker_pair):
     start_positions_len = len(start_positions)
 
     if start_positions_len == 0 and end_positions_len == 0:
-        print("SyntaxFold: No start markers or end markers found in file. "
-              "Aborting request.")
+        print("SyntaxFold: No start markers or end markers found for: \n Start marker: \""+start_marker+"\" and end marker: \""+end_marker+"\"\n Skipping marker entry")
         return None, None
 
     return start_positions, end_positions
@@ -100,7 +99,7 @@ def get_all_fold_regions(view):
 
         last_matched_end_pos = -1
         if start_positions is None or end_positions is None:
-            return None
+            continue
 
         for end_pos in end_positions:
             last_matched_start_pos = -1
