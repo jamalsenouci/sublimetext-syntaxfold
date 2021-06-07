@@ -5,13 +5,13 @@
   },
 
   { "caption": "SyntaxFold: Fold All",
-    "command": "fold_all"
+    "command": "syntaxfold_fold_all"
   },
   { "caption": "SyntaxFold: Unfold All",
-    "command": "unfold_all"
+    "command": "syntaxfold_unfold_all"
   },
   { "caption": "SyntaxFold: Toggle Fold Current",
-    "command": "toggle_fold_current"
+    "command": "syntaxfold_toggle_fold_current"
   },
 
   // Configuration files
