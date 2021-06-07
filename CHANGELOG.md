@@ -33,3 +33,8 @@ v2.2.0 (2017-05-01)
 v2.3.0 (2019-12-18)
 -------------------
 - fixed issue 40 (https://github.com/jamalsenouci/sublimetext-syntaxfold/issues/40)
+
+v2.4.0 (2019-06-07)
+-------------------
+- fixed issue #43 (https://github.com/jamalsenouci/sublimetext-syntaxfold/issues/43) 
+- commands have been prefixed with syntaxfold_
