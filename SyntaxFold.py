@@ -164,7 +164,7 @@ class FoldCommands(sublime_plugin.TextCommand):
             self.view.unfold(regions)
 
 
-class FoldAllCommand(FoldCommands):
+class SyntaxfoldFoldAllCommand(FoldCommands):
     def run(self, edit):
         fold_regions = get_all_fold_regions(self.view)
         if fold_regions is None:
@@ -173,7 +173,7 @@ class FoldAllCommand(FoldCommands):
         operation_on_all_regions(fold_regions, self.fold)
 
 
-class UnfoldAllCommand(FoldCommands):
+class SyntaxfoldUnfoldAllCommand(FoldCommands):
     def run(self, edit):
         fold_regions = get_all_fold_regions(self.view)
         if fold_regions is None:
@@ -182,7 +182,7 @@ class UnfoldAllCommand(FoldCommands):
         operation_on_all_regions(fold_regions, self.unfold)
 
 
-class ToggleFoldCurrentCommand(FoldCommands):
+class SyntaxfoldToggleFoldCurrentCommand(FoldCommands):
     def run(self, edit):
         fold_regions = get_all_fold_regions(self.view)
         if fold_regions is None:
